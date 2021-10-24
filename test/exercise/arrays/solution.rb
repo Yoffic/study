@@ -4,29 +4,26 @@ module Exercise
       def replace(array)
         max = 0
         array.each { |item| max = item if item > max }
-        array.map { |item| item > 0 ? max : item }
+        array.map { |item| item.positive? ? max : item }
       end
 
-      def search(_array, _query)
-        def binary_search(items, counter, query)
-          if items.empty?
-            return -1
-          end
+      def search(array, query)
+        binary_search = lambda do |items, counter, item|
+          return -1 if items.empty?
+
           half_count = items.length / 2
           left = items[0, half_count]
-          right = items[half_count..]
-          if left.last == query
-            return counter + half_count - 1
-          elsif right.first == query
-            return counter + half_count
-          end
-          if left.last && left.last < query
-            binary_search(right, counter + half_count, query)
+          right = items[half_count..items.length]
+          return counter + half_count - 1 if left.last == item
+          return counter + half_count if right.first == item
+
+          if left.last && left.last < item
+            binary_search.call(right, counter + half_count, item)
           else
-            binary_search(left, counter, query)
+            binary_search.call(left, counter, item)
           end
         end
-        binary_search(_array, 0, _query)
+        binary_search.call(array, 0, query)
       end
     end
   end
