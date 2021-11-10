@@ -5,10 +5,8 @@ module Exercise
       # film["name"], film["rating_kinopoisk"], film["rating_imdb"],
       # film["genres"], film["year"], film["access_level"], film["country"]
       def rating(array)
-        has_many_countries = ->(movie) { movie['country'] && movie['country'].split(',').length > 1 }
-        has_positive_rating = ->(movie) { movie['rating_kinopoisk'].to_f.positive? }
-        rating_to_count = array.select(&has_many_countries)
-                               .select(&has_positive_rating)
+        should_count_rating = ->(movie) { movie['country'] && movie['country'].split(',').length > 1 && movie['rating_kinopoisk'].to_f.positive? }
+        rating_to_count = array.select(&should_count_rating)
                                .map { |movie| movie['rating_kinopoisk'].to_f }
         rating_sum = rating_to_count.reduce(0) { |sum, rating| sum + rating }
         rating_sum / rating_to_count.length
