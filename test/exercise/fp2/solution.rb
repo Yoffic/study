@@ -7,6 +7,7 @@ module Exercise
       # Написать свою функцию my_each
       def apply_block(items, block)
         return if items.empty?
+
         first, *rest = items
         block.call(first)
         apply_block(rest, block)
@@ -14,6 +15,7 @@ module Exercise
 
       def reduce_with_block(result, items, block)
         return result if items.empty?
+
         first, *rest = items
         new_result = result.nil? ? first : block.call(result, first)
         reduce_with_block(new_result, rest, block)
